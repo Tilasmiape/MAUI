@@ -1,0 +1,86 @@
+﻿@page "/calendar"
+@using ReflektHybridJournal.Models
+@inject ReflektHybridJournal.Data.JournalDbContext Db
+
+<h3>Calendar</h3>
+
+<div class="mb-2">
+    <button class="btn btn-outline-secondary btn-sm" @onclick="PrevMonth">&lt;</button>
+    <span class="mx-2">@currentMonth.ToString("MMMM yyyy")</span>
+    <button class="btn btn-outline-secondary btn-sm" @onclick="NextMonth">&gt;</button>
+</div>
+
+<div class="calendar-grid">
+    @foreach (var day in daysInMonth)
+    {
+        var hasEntry = entries.Any(e => e.EntryDate.Date == day.Date);
+        <button class="calendar-day @(hasEntry ? "has-entry" : "")"
+                @onclick="() => SelectDay(day)">
+            @day.Day
+        </button>
+    }
+</div>
+
+@if (selectedEntry != null)
+{
+    <div class="mt-3">
+        <h5>@selectedEntry.EntryDate.ToLongDateString()</h5>
+        <strong>@selectedEntry.Title</strong>
+        <p>@selectedEntry.Content</p>
+    </div>
+}
+else if (selectedDate != null)
+{
+    <p class="mt-3">No entry for @selectedDate.Value.ToLongDateString().</p>
+}
+
+@code {
+    DateTime currentMonth = DateTime.Today;
+    List<DateTime> daysInMonth = new();
+    List<JournalEntry> entries = new();
+    JournalEntry? selectedEntry;
+    DateTime? selectedDate;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadMonthAsync();
+    }
+
+    async Task LoadMonthAsync()
+    {
+        daysInMonth = Enumerable
+            .Range(1, DateTime.DaysInMonth(currentMonth.Year, currentMonth.Month))
+            .Select(d => new DateTime(currentMonth.Year, currentMonth.Month, d))
+            .ToList();
+
+        var from = daysInMonth.First();
+        var to = daysInMonth.Last();
+
+        // reuse GetEntriesAsync then filter in memory for now
+        var all = await Db.GetEntriesAsync();
+        entries = all
+            .Where(e => e.EntryDate.Date >= from.Date && e.EntryDate.Date <= to.Date)
+            .ToList();
+
+        selectedEntry = null;
+        selectedDate = null;
+    }
+
+    async Task PrevMonth()
+    {
+        currentMonth = currentMonth.AddMonths(-1);
+        await LoadMonthAsync();
+    }
+
+    async Task NextMonth()
+    {
+        currentMonth = currentMonth.AddMonths(1);
+        await LoadMonthAsync();
+    }
+
+    void SelectDay(DateTime day)
+    {
+        selectedDate = day;
+        selectedEntry = entries.FirstOrDefault(e => e.EntryDate.Date == day.Date);
+    }
+}

@@ -1,0 +1,109 @@
+﻿@page "/entries"
+@using ReflektHybridJournal.Models
+
+@inject ReflektHybridJournal.Data.JournalDbContext Db
+
+<h3>All Entries</h3>
+
+<div class="row mb-3">
+    <div class="col-md-3">
+        <input type="date" class="form-control"
+               value="@fromString"
+               @onchange="OnFromChanged" />
+    </div>
+
+    <div class="col-md-3">
+        <input type="date" class="form-control"
+               value="@toString"
+               @onchange="OnToChanged" />
+    </div>
+
+    <div class="col-md-3">
+        <select class="form-select" @bind="selectedMood">
+            <option value="">All moods</option>
+            <option value="Positive">Positive</option>
+            <option value="Neutral">Neutral</option>
+            <option value="Negative">Negative</option>
+        </select>
+    </div>
+
+    <div class="col-md-3">
+        <input class="form-control"
+               placeholder="Search text..."
+               @bind="searchText" />
+    </div>
+</div>
+
+@if (entries.Count == 0)
+{
+    <p>No entries yet. Start writing!</p>
+}
+else
+{
+    <ul class="list-group">
+        @foreach (var e in FilteredEntries)
+        {
+            <li class="list-group-item">
+                <b>@e.EntryDate.ToLongDateString()</b> – @e.Title
+                @if (!string.IsNullOrWhiteSpace(e.PrimaryMood))
+                {
+                    <span class="badge bg-secondary ms-2">@e.PrimaryMood</span>
+                }
+            </li>
+        }
+    </ul>
+}
+
+@code {
+    string? searchText;
+    string? fromString;
+    string? toString;
+    string? selectedMood;
+
+    List<JournalEntry> entries = new();
+
+    IEnumerable<JournalEntry> FilteredEntries
+    {
+        get
+        {
+            var query = entries.AsEnumerable();
+
+            if (!string.IsNullOrWhiteSpace(searchText))
+            {
+                query = query.Where(e =>
+                    (e.Title ?? "").Contains(searchText, StringComparison.OrdinalIgnoreCase) ||
+                    (e.Content ?? "").Contains(searchText, StringComparison.OrdinalIgnoreCase));
+            }
+
+            if (!string.IsNullOrWhiteSpace(fromString) &&
+                DateTime.TryParse(fromString, out var from))
+            {
+                query = query.Where(e => e.EntryDate.Date >= from.Date);
+            }
+
+            if (!string.IsNullOrWhiteSpace(toString) &&
+                DateTime.TryParse(toString, out var to))
+            {
+                query = query.Where(e => e.EntryDate.Date <= to.Date);
+            }
+
+            if (!string.IsNullOrWhiteSpace(selectedMood))
+            {
+                query = query.Where(e => e.PrimaryMood == selectedMood);
+            }
+
+            return query;
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        entries = await Db.GetEntriesAsync();
+    }
+
+    void OnFromChanged(ChangeEventArgs e)
+        => fromString = e.Value?.ToString();
+
+    void OnToChanged(ChangeEventArgs e)
+        => toString = e.Value?.ToString();
+}

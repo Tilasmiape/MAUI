@@ -1,0 +1,45 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\Tilasmi Subedi\\source\\repos\\ReflektHybridJournal\\ReflektHybridJournal\\obj\\Debug\\net9.0-windows10.0.19041.0\\win10-x64\\scopedcss\\bundle\\ReflektHybridJournal.styles.css",
+      "PackagePath": "staticwebassets\\ReflektHybridJournal.styles.css"
+    },
+    {
+      "Id": "C:\\Users\\Tilasmi Subedi\\source\\repos\\ReflektHybridJournal\\ReflektHybridJournal\\wwwroot\\css\\app.css",
+      "PackagePath": "staticwebassets\\css\\app.css"
+    },
+    {
+      "Id": "C:\\Users\\Tilasmi Subedi\\source\\repos\\ReflektHybridJournal\\ReflektHybridJournal\\wwwroot\\css\\bootstrap\\bootstrap.min.css",
+      "PackagePath": "staticwebassets\\css\\bootstrap\\bootstrap.min.css"
+    },
+    {
+      "Id": "C:\\Users\\Tilasmi Subedi\\source\\repos\\ReflektHybridJournal\\ReflektHybridJournal\\wwwroot\\css\\bootstrap\\bootstrap.min.css.map",
+      "PackagePath": "staticwebassets\\css\\bootstrap\\bootstrap.min.css.map"
+    },
+    {
+      "Id": "C:\\Users\\Tilasmi Subedi\\source\\repos\\ReflektHybridJournal\\ReflektHybridJournal\\wwwroot\\index.html",
+      "PackagePath": "staticwebassets\\index.html"
+    },
+    {
+      "Id": "obj\\Debug\\net9.0-windows10.0.19041.0\\win10-x64\\staticwebassets\\msbuild.ReflektHybridJournal.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssetEndpoints.props"
+    },
+    {
+      "Id": "obj\\Debug\\net9.0-windows10.0.19041.0\\win10-x64\\staticwebassets\\msbuild.ReflektHybridJournal.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net9.0-windows10.0.19041.0\\win10-x64\\staticwebassets\\msbuild.build.ReflektHybridJournal.props",
+      "PackagePath": "build\\ReflektHybridJournal.props"
+    },
+    {
+      "Id": "obj\\Debug\\net9.0-windows10.0.19041.0\\win10-x64\\staticwebassets\\msbuild.buildMultiTargeting.ReflektHybridJournal.props",
+      "PackagePath": "buildMultiTargeting\\ReflektHybridJournal.props"
+    },
+    {
+      "Id": "obj\\Debug\\net9.0-windows10.0.19041.0\\win10-x64\\staticwebassets\\msbuild.buildTransitive.ReflektHybridJournal.props",
+      "PackagePath": "buildTransitive\\ReflektHybridJournal.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

@@ -1,0 +1,95 @@
+﻿@page "/"
+@using ReflektHybridJournal.Models
+
+@inject ReflektHybridJournal.Data.JournalDbContext Db
+
+<h3>Today</h3>
+
+@if (entry is null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <EditForm Model="entry" OnValidSubmit="Save">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="mb-3">
+            <label class="form-label">Date</label>
+            <input type="date" class="form-control"
+                   value="@entry.EntryDate.ToString("yyyy-MM-dd")"
+                   @onchange="OnDateChanged" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Title</label>
+            <InputText class="form-control" @bind-Value="entry.Title" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Content</label>
+            <InputTextArea class="form-control" @bind-Value="entry.Content" rows="8" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Primary Mood</label>
+            <select class="form-select" @bind="entry.PrimaryMood">
+                <option value="">Select mood</option>
+                <option value="Positive">Positive</option>
+                <option value="Neutral">Neutral</option>
+                <option value="Negative">Negative</option>
+            </select>
+        </div>
+
+        <button class="btn btn-primary" type="submit" disabled="@(isSaving)">
+            @(isSaving ? "Saving..." : "Save")
+        </button>
+    </EditForm>
+}
+
+@code {
+    JournalEntry? entry;
+    bool isSaving;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var existing = await Db.GetEntryByDateAsync(DateTime.Today);
+
+        if (existing is not null)
+        {
+            entry = existing;
+        }
+        else
+        {
+            entry = new JournalEntry
+            {
+                EntryDate = DateTime.Today,
+                Title = "",
+                Content = "",
+                PrimaryMood = ""
+            };
+        }
+    }
+
+    async Task Save()
+    {
+        if (entry is null)
+            return;
+
+        isSaving = true;
+        await Db.SaveEntryAsync(entry);
+        isSaving = false;
+    }
+
+    void OnDateChanged(ChangeEventArgs e)
+    {
+        if (entry is null)
+            return;
+
+        if (DateTime.TryParse(e.Value?.ToString(), out var date))
+        {
+            entry.EntryDate = date;
+        }
+    }
+}

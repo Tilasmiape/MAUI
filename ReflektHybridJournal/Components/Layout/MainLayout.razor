@@ -1,0 +1,29 @@
+﻿@inherits LayoutComponentBase
+
+<div class="app-root @(isDark ? "dark" : null)">
+    <header class="top-row px-4 d-flex align-items-center">
+        <h1 class="me-auto">ReflektHybridJournal</h1>
+
+        <button class="btn btn-sm btn-outline-secondary"
+                @onclick="ToggleTheme">
+            @(isDark ? "Light theme" : "Dark theme")
+        </button>
+    </header>
+
+    <div class="page">
+        <NavMenu />
+
+        <main>
+            @Body
+        </main>
+    </div>
+</div>
+
+@code {
+    bool isDark;
+
+    void ToggleTheme()
+    {
+        isDark = !isDark;
+    }
+}
